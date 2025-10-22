@@ -1,0 +1,18 @@
+<h1>helllo</h1>
+<tbody>
+    {% for c in complaints %}
+    <tr>
+        <td>{{ c.room_number }}</td>
+        <td>{{ c.issue }}</td>
+        <td>
+            {% if c.status == 'pending' %}
+                <span class="badge bg-warning">Pending</span>
+            {% elif c.status == 'in_progress' %}
+                <span class="badge bg-info">In Progress</span>
+            {% else %}
+                <span class="badge bg-success">Resolved</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

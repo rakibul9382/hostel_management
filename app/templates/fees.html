@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Management | Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 260px;
+            background: linear-gradient(135deg, #007bff, #1a2a6c);
+            padding: 20px;
+            color: white;
+        }
+        .sidebar h3 {
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .sidebar .nav-link i {
+            margin-right: 15px;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            width: calc(100% - 260px);
+        }
+        .stat-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: none;
+        }
+        .stat-card .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3 class="text-center"><i class="bi bi-building"></i> HostelMS</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="{{url_for('admin.admin_dashboard')}}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{url_for('student.student_information')}}"><i class="bi bi-people-fill"></i> Students</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{url_for('room.rooms_details')}}"><i class="bi bi-door-open-fill"></i> Rooms</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-wallet-fill"></i> Fees</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{url_for('complaint.complaint')}}"><i class="bi bi-exclamation-triangle-fill"></i> Complaints</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{url_for('mess.mess')}}"><i class="bi bi-cup-straw"></i> Mess</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('profile.profile_information')}}"><i class="bi bi-person-circle"></i> Profile</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link" href="{{ url_for('logout.logout')}}"><i class="bi bi-box-arrow-left"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header class="mb-4">
+            <h1>Fee Management</h1>
+        </header>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-circle bg-success"><i class="bi bi-check2-circle"></i></div>
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Collected (This Month)</h6>
+                            <h4 class="card-title">{{collected_this_month}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-circle bg-danger"><i class="bi bi-exclamation-circle"></i></div>
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Total Due</h6>
+                            <h4 class="card-title">{{total_due}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-circle bg-warning"><i class="bi bi-person-exclamation"></i></div>
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Defaulters</h6>
+                            <h4 class="card-title">7</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <form method="GET" action="{{ url_for('fees.fees') }}">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-5">
+                            <h5>Fee Records</h5>
+                        </div>
+            
+                        <div class="col-md-3">
+                            <input type="text" class="form-control form-control-sm" name="search" placeholder="Search by name..." value="{{ request.args.get('search', '') }}">
+                        </div>
+            
+                        <div class="col-md-2">
+                            <select class="form-select form-select-sm" name="status">
+                                <option value="">Filter by Status...</option>
+                                <option value="paid" {% if request.args.get('status') == 'Paid' %}selected{% endif %}>Paid</option>
+                                <option value="due" {% if request.args.get('status') == 'Due' %}selected{% endif %}>Due</option>
+                                <option value="overdue" {% if request.args.get('status') == 'Overdue' %}selected{% endif %}>Overdue</option>
+
+
+                            </select>
+                        </div>
+            
+                        <div class="col-md-2 d-flex">
+                            <input type="month" class="form-control form-select-sm me-2" name="month" value="{{ request.args.get('month', '') }}">
+                            <button class="btn btn-sm btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Room No.</th>
+                                <th>Billing Month</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Payment Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_information %}
+                            <tr>
+                                <td>{{ row.student_name }}</td>
+                                <td>{{ row.room_number }}</td>
+                                <td>{{ row.billing_month }}</td>
+                                <td>₹{{ row.amount }}</td>
+
+                                <td>
+                                    {% if row.status == 'Paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                    {% elif row.status == 'Due' %}
+                                    <span class="badge bg-danger">Due</span>
+                                    {% elif row.status == 'Overdue' %}
+                                    <span class="badge bg-dark">Overdue</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ row.status }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ row.payment_date if row.payment_date else 'N/A' }}</td>
+
+                                <td>
+                                    {% if row.status == 'Paid' %}
+                                    <button class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eye"></i> View
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#recordPaymentModal">
+                                     Record Payment
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="recordPaymentModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Record Manual Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <p><strong>Student:</strong> Priya Sharma</p>
+                            <p><strong>Room No:</strong> A-102</p>
+                            <p><strong>Amount Due:</strong> ₹5,000</p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentDate" class="form-label">Payment Date</label>
+                            <input type="date" class="form-control" id="paymentDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <select class="form-select" id="paymentMethod">
+                                <option>Cash</option>
+                                <option>UPI</option>
+                                <option>Bank Transfer</option>
+                            </select>
+                        </div>
+                         <div class="mb-3">
+                            <label for="transactionId" class="form-label">Transaction ID (Optional)</label>
+                            <input type="text" class="form-control" id="transactionId">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success">Confirm Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
