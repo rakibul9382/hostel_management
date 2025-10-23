@@ -5,4 +5,4 @@ logout_bp = Blueprint('logout',__name__)
 def logout():
     session.clear() # Clear the session manually
     flash('You have been logged out.', 'info')
-    return redirect(url_for('login.login')) # Redirect to the login page route
+    return redirect(url_for('home.index')) # Redirect to the login page route
