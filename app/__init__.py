@@ -3,6 +3,7 @@ from .config import Config
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    from app.routes.home import home_bp
     from app.routes.admin import admin_bp
     from app.routes.fees import fees_bp
     from app.routes.room import room_bp
@@ -13,6 +14,7 @@ def create_app():
     from app.routes.mees import mess_bp
     from app.routes.profile import profile_bp
     from app.routes.student import student_bp
+    app.register_blueprint(home_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(fees_bp)
     app.register_blueprint(room_bp)
