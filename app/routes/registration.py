@@ -32,7 +32,7 @@ def register():
                 return render_template('register.html')
 
             sql="""
-                INSERT INTO USERS(email,password_hash,name,mobile_no)
+                INSERT INTO users(email,password_hash,name,mobile_no)
                 VALUES(%s,%s,%s,%s)
             """
             cursor.execute(sql,(email,password_hash,full_name,phone_number))
