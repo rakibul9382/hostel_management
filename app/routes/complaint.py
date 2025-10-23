@@ -14,7 +14,7 @@ def complaint():
     inprogress_count = 0
     resolved_today_count = 0
     try:
-        db=mysql.connector.connect(config)
+        db=mysql.connector.connect(**config)
         cursor=db.cursor(dictionary=True)
         cursor.execute("""
             SELECT 
@@ -82,7 +82,7 @@ def update_complaint_status():
     config = current_app.config['DB_CONFIG']
 
     try:
-        db = mysql.connector.connect(config)
+        db = mysql.connector.connect(**config)
         cursor = db.cursor()
         cursor.execute("""
             UPDATE complaints c
