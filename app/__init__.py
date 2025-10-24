@@ -1,6 +1,9 @@
 from flask import Flask,session
+from dotenv import load_dotenv  # ✅ Add this line
+import os
 from .config import Config
 def create_app():
+    load_dotenv()
     app = Flask(__name__)
     app.config.from_object(Config)
     from app.routes.home import home_bp
