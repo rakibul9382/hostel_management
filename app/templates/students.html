@@ -166,35 +166,66 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form method="POST" action="/add_student">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="studentName" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="studentName" required>
+                                <input type="text" class="form-control" id="studentName" name="studentName" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="studentEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="studentEmail" required>
+                                <input type="email" class="form-control" id="studentEmail" name="studentEmail" required>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="studentPhone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="studentPhone" required>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="studentPhone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="studentPhone" name="studentPhone" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="studentGender" class="form-label">Gender</label>
+                                <select class="form-select" id="studentGender" name="studentGender" required>
+                                    <option value="" selected disabled>Select Gender...</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="studentDob" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="studentDob" name="studentDob">
+                        </div>
+
                         <div class="mb-3">
                             <label for="studentAddress" class="form-label">Address</label>
-                            <textarea class="form-control" id="studentAddress" rows="2"></textarea>
+                            <textarea class="form-control" id="studentAddress" name="studentAddress" rows="2"></textarea>
                         </div>
-                         <div class="row">
+
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="studentCourse" class="form-label">Course</label>
-                                <input type="text" class="form-control" id="studentCourse">
+                                <input type="text" class="form-control" id="studentCourse" name="studentCourse">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="studentYear" class="form-label">Year</label>
-                                <input type="number" class="form-control" id="studentYear" min="1">
+                                <input type="number" class="form-control" id="studentYear" name="studentYear" min="1">
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="roomId" class="form-label">Room ID</label>
+                                <input type="number" class="form-control" id="roomId" name="roomId" placeholder="Enter Room ID">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="admissionDate" class="form-label">Admission Date</label>
+                                <input type="date" class="form-control" id="admissionDate" name="admissionDate">
+                            </div>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
