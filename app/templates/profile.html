@@ -60,6 +60,9 @@
             border: 4px solid #fff;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .upload-form {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -98,7 +101,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="{{url_for('profile.profile_information')}}"> <i class="bi bi-person-circle"></i> Profile
+                <a class="nav-link active" href="{{url_for('profile.profile_information')}}"> 
+                    <i class="bi bi-person-circle"></i> Profile
                 </a>
             </li>
             <li class="nav-item mt-auto">
@@ -113,6 +117,7 @@
         <header class="mb-4">
             <h1>My Profile</h1>
         </header>
+        
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -131,10 +136,21 @@
             <div class="col-lg-4">
                 <div class="card profile-card text-center">
                     <div class="card-body">
-                        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-pic my-3">
-                        <h4 class="card-title mt-3">{{name}}</h4>
-                        <p class="text-muted">{{role}}</p>
-                        <button class="btn btn-primary btn-sm">Change Picture</button>
+                        <!-- Display actual profile picture -->
+                        <img src="{{ url_for('static', filename='uploads/' + profile_pic) }}" 
+                             alt="Profile Picture" class="profile-pic my-3"
+                             onerror="this.src='https://via.placeholder.com/150'">
+                        <h4 class="card-title mt-3">{{ name }}</h4>
+                        <p class="text-muted">{{ email }}</p>
+                        
+                        <!-- Profile Picture Upload Form -->
+                        <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                            <input type="file" name="file" id="fileInput" accept=".png,.jpg,.jpeg,.gif" class="form-control mb-2">
+                            <button type="submit" class="btn btn-success btn-sm">Upload</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="cancelUpload()">Cancel</button>
+                        </form>
+                        
+                        <button class="btn btn-primary btn-sm" onclick="showUploadForm()">Change Picture</button>
                     </div>
                 </div>
             </div>
@@ -156,11 +172,11 @@
                                 <form method="post" action="{{url_for('profile.edit_profile')}}">
                                     <div class="mb-3">
                                         <label for="fullName" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="fullName" value="{{name}}" name="fullName">
+                                        <input type="text" class="form-control" id="fullName" value="{{ name }}" name="fullName" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email Address</label>
-                                        <input type="email" class="form-control" id="email" value="{{email}}" name="email_address">
+                                        <input type="email" class="form-control" id="email" value="{{ email }}" name="email_address" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save Changes</button>
                                 </form>
@@ -168,16 +184,16 @@
                             <div class="tab-pane fade" id="password" role="tabpanel">
                                 <form method="post" action="{{url_for('profile.change_password')}}">
                                     <div class="mb-3">
-                                        <label for="currentPassword" class="form-label" >Current Password</label>
-                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                                        <label for="currentPassword" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="newPassword" class="form-label">New Password</label>
-                                        <input type="password" class="form-control" id="newPassword" name="newPassword">
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
-                                        <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword">
+                                        <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Update Password</button>
                                 </form>
@@ -190,5 +206,24 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showUploadForm() {
+            document.querySelector('.upload-form').style.display = 'block';
+            document.querySelector('.btn-primary').style.display = 'none';
+        }
+        
+        function cancelUpload() {
+            document.querySelector('.upload-form').style.display = 'none';
+            document.querySelector('.btn-primary').style.display = 'block';
+            document.getElementById('fileInput').value = '';
+        }
+        
+        // Auto-submit form when file is selected
+        document.getElementById('fileInput').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                document.getElementById('uploadForm').submit();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -7,6 +7,9 @@ class Config:
     
     # You should always have a secret key
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a-very-hard-to-guess-string'
+    UPLOAD_FOLDER=os.path.join('app','static','uploads')
+    ALLOWED_EXTENSIONS={'png','jpg','jpeg'}
+    MAX_CONTENT_LENGTH=2*1024*1024  #max 2MB per file
 
     # Create your database config dictionary *once* here
     DB_CONFIG = {
